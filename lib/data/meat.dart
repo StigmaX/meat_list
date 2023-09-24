@@ -6,14 +6,20 @@ class Meat {
   Meat(this.name, this.image, this.description);
 }
 
-setMeat() {
+class MeatOperation {
   var meatList = [];
-  meatList.add(Meat('Chicken', 'chicken.jpg', 'Soft Chicken Meat'));
-  meatList.add(Meat('Beef', './images/meat.jpg', 'Soft Cow Meat'));
-  return meatList;
-}
+  void setMeat() {
+    meatList.add(Meat('Chicken', 'chicken.jpg', 'Soft Chicken Meat'));
+    meatList.add(Meat('Beef', './images/meat.jpg', 'Soft Cow Meat'));
+    meatList.add(Meat('Beef', './images/meat.jpg', 'Soft Cow Meat'));
+    meatList.add(Meat('Ribs', './images/meat.jpg', 'Soft Cow Meat'));
+  }
 
-getMeat() {
-  var meatList = setMeat();
-  return meatList;
+  void addMeat(name, image, desc) {
+    meatList.add(Meat(name, image, desc));
+  }
+
+  List getMeat() {
+    return meatList;
+  }
 }
