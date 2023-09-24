@@ -18,9 +18,7 @@ class MeatCard extends StatelessWidget {
       elevation: elevation,
       margin: const EdgeInsets.all(0.0),
       child: InkWell(
-        onTap: () {
-          elevation = 10.0;
-        },
+        onTap: () {},
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,

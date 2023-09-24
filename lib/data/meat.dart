@@ -7,16 +7,23 @@ class Meat {
 }
 
 class MeatOperation {
+  static final MeatOperation _meatOperation = MeatOperation._internal();
+  factory MeatOperation() {
+    return _meatOperation;
+  }
+  MeatOperation._internal();
   var meatList = [];
-  void setMeat() {
-    meatList.add(Meat('Chicken', 'chicken.jpg', 'Soft Chicken Meat'));
-    meatList.add(Meat('Beef', './images/meat.jpg', 'Soft Cow Meat'));
-    meatList.add(Meat('Beef', './images/meat.jpg', 'Soft Cow Meat'));
-    meatList.add(Meat('Ribs', './images/meat.jpg', 'Soft Cow Meat'));
+
+  void addMeat(Meat meat) {
+    meatList.add(meat);
   }
 
-  void addMeat(name, image, desc) {
-    meatList.add(Meat(name, image, desc));
+  void removeMeat(Meat meat) {
+    meatList.remove(meat);
+  }
+
+  void editMeat(Meat meat, int index) {
+    meatList[index] = meat;
   }
 
   List getMeat() {
