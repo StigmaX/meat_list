@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
             children: [
               ListTile(
                 tileColor: Theme.of(context).colorScheme.primaryContainer,
-                title: MeatCard(meat: getMeat[index]),
+                title: Text(getMeat[index].name),
                 onLongPress: () {
                   showDialog(
                       context: context,
