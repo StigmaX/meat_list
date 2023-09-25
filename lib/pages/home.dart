@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meat_list/data/meat.dart';
 import 'package:meat_list/data/text_styles.dart';
+import '../widgets/dialog_add_meat.dart';
+import '../widgets/dialog_confirm.dart';
 import '../widgets/meat_card.dart';
 
 class Home extends StatefulWidget {
@@ -17,26 +19,72 @@ class _HomeState extends State<Home> {
     var getMeat = meatOp.getMeat();
     return Scaffold(
       appBar: const AppBars(),
-      body: ListView(
-        children: [
-          for (var meat in getMeat)
-            ListTile(
-              title: MeatCard(meat: meat),
-              onLongPress: () {
-                setState(() {
-                  meatOp.removeMeat(meat);
-                });
-              },
-            ),
-        ],
+      body: ListView.builder(
+        itemCount: getMeat.length,
+        padding: const EdgeInsets.all(10),
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              ListTile(
+                tileColor: Theme.of(context).colorScheme.primaryContainer,
+                title: MeatCard(meat: getMeat[index]),
+                onLongPress: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddDialog(
+                          meat: getMeat[index],
+                        );
+                      }).then((value) {
+                    setState(() {
+                      meatOp.editMeat(
+                          Meat(value[0], value[1], value[2]), index);
+                    });
+                  });
+                },
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ConfirmDialog(meat: getMeat[index]);
+                      }).then((value) {
+                    if (value) {
+                      setState(() {
+                        meatOp.removeMeat(getMeat[index]);
+                      });
+                    }
+                  });
+                },
+                textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
+              const SizedBox(height: 5),
+            ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
+        elevation: 5.0,
+        highlightElevation: 10.0,
+        shape: const CircleBorder(),
+        backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          setState(() {
-            meatOp.addMeat(Meat('asd', 'asd', 'asd'));
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return const AddDialog(
+                  meat: null,
+                );
+              }).then((value) {
+            setState(() {
+              meatOp.addMeat(Meat(value[0], value[1], value[2]));
+            });
           });
         },
-        child: const Icon(Icons.add),
+        splashColor: Theme.of(context).colorScheme.secondary,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -50,13 +98,13 @@ class AppBars extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Center(
+      title: Center(
         child: Text(
           'Meat List',
-          style: appBarStyle,
+          style: AppStyles.appBarStyle(context),
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       surfaceTintColor: Colors.white,
     );
   }

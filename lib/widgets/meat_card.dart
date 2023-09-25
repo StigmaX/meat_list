@@ -48,11 +48,11 @@ class MeatCard extends StatelessWidget {
             ),
             Text(
               meat.name!,
-              style: titleStyle,
+              style: AppStyles.titleStyle(),
             ),
             Text(
               meat.description!,
-              style: descStyle,
+              style: AppStyles.descStyle(),
             ),
           ],
         ),
