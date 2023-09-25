@@ -1,19 +1,35 @@
 import 'package:flutter/material.dart';
 
-const titleStyle = TextStyle(
-  color: Colors.white,
-  fontSize: 25,
-  fontWeight: FontWeight.bold,
-);
+class AppStyles {
+  static titleStyle() {
+    return const TextStyle(
+      color: Colors.white,
+      fontSize: 25,
+      fontWeight: FontWeight.bold,
+    );
+  }
 
-const descStyle = TextStyle(
-  color: Colors.white70,
-  fontSize: 12,
-  fontWeight: FontWeight.bold,
-);
+  static descStyle() {
+    const TextStyle(
+      color: Colors.white70,
+      fontSize: 12,
+      fontWeight: FontWeight.bold,
+    );
+  }
 
-const appBarStyle = TextStyle(
-  color: Color.fromARGB(179, 0, 0, 0),
-  fontSize: 30,
-  fontWeight: FontWeight.bold,
-);
+  static appBarStyle(BuildContext context) {
+    return const TextStyle(
+      color: Color.fromARGB(255, 255, 255, 255),
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
+  static hintText() {
+    return const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic);
+  }
+
+  static dialogTitle(BuildContext context) {
+    return TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer);
+  }
+}
