@@ -38,17 +38,15 @@ class AddDialog extends StatelessWidget {
             TextField(
                 controller: TextEditingController(text: name),
                 onChanged: (value) => name = value,
-                decoration: AppStyles.hintText(Icons.abc, 'Meat Name', 'Name')),
+                decoration: AppStyles.hintText(Icons.abc, 'Name')),
             TextField(
                 controller: TextEditingController(text: image),
                 onChanged: (value) => image = value,
-                decoration:
-                    AppStyles.hintText(Icons.image, 'Image Path', 'image')),
+                decoration: AppStyles.hintText(Icons.image, 'image')),
             TextField(
                 controller: TextEditingController(text: desc),
                 onChanged: (value) => desc = value,
-                decoration: AppStyles.hintText(
-                    Icons.description, 'Meat Description', 'Desc'))
+                decoration: AppStyles.hintText(Icons.description, 'Desc'))
           ],
         ),
       ),
