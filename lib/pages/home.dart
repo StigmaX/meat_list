@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meat_list/data/meat.dart';
-import 'package:meat_list/data/text_styles.dart';
+import 'package:meat_list/data/app_style.dart';
 import '../widgets/dialog_add_meat.dart';
 import '../widgets/dialog_confirm.dart';
 import '../widgets/meat_card.dart';
@@ -26,8 +26,26 @@ class _HomeState extends State<Home> {
           return Column(
             children: [
               ListTile(
+                contentPadding: const EdgeInsets.only(left: 15, right: 15),
+                trailing: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    VerticalDivider(),
+                    Icon(Icons.arrow_forward_ios_sharp),
+                  ],
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(13),
+                ),
                 tileColor: Theme.of(context).colorScheme.primaryContainer,
-                title: Text(getMeat[index].name),
+                title: Text(
+                  getMeat[index].name,
+                  style: AppStyles.listTitle(context),
+                ),
+                subtitle: Text(
+                  getMeat[index].description,
+                  style: AppStyles.listSubTitle(context),
+                ),
                 onLongPress: () {
                   showDialog(
                       context: context,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meat_list/data/meat.dart';
-import 'package:meat_list/data/text_styles.dart';
+import 'package:meat_list/data/app_style.dart';
 
 class MeatCard extends StatelessWidget {
   const MeatCard({

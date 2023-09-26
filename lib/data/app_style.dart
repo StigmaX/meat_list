@@ -37,4 +37,24 @@ class AppStyles {
       color: Theme.of(context).colorScheme.onPrimaryContainer,
     );
   }
+
+  //listTile
+  static listTitle(BuildContext context) {
+    return TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      shadows: <Shadow>[
+        Shadow(
+            offset: const Offset(1.0, 1.0),
+            blurRadius: 3.0,
+            color: Theme.of(context).colorScheme.primary),
+      ],
+    );
+  }
+
+  static listSubTitle(BuildContext context) {
+    return const TextStyle(
+      fontSize: 14,
+    );
+  }
 }
