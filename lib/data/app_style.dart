@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AppStyles {
   static titleStyle() {
@@ -56,5 +57,9 @@ class AppStyles {
     return const TextStyle(
       fontSize: 14,
     );
+  }
+
+  static toastMessage(String msg) {
+    return Fluttertoast.showToast(msg: msg);
   }
 }

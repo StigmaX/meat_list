@@ -3,6 +3,7 @@ import 'package:meat_list/data/meat.dart';
 import 'package:meat_list/data/app_style.dart';
 import '../widgets/dialog_add_meat.dart';
 import '../widgets/dialog_confirm.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/meat_card.dart';
 
 class Home extends StatefulWidget {
@@ -27,11 +28,16 @@ class _HomeState extends State<Home> {
             children: [
               ListTile(
                 contentPadding: const EdgeInsets.only(left: 15, right: 15),
-                trailing: const Row(
+                trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    VerticalDivider(),
-                    Icon(Icons.arrow_forward_ios_sharp),
+                    const VerticalDivider(),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios_sharp),
+                      onPressed: () {
+                        AppStyles.toastMessage('Detail');
+                      },
+                    ),
                   ],
                 ),
                 shape: RoundedRectangleBorder(
@@ -56,7 +62,10 @@ class _HomeState extends State<Home> {
                       }).then((value) {
                     setState(() {
                       meatOp.editMeat(
-                          Meat(value[0], value[1], value[2]), index);
+                        Meat(value[0], value[1], value[2]),
+                        index,
+                      );
+                      AppStyles.toastMessage('Meat Edited');
                     });
                   });
                 },
@@ -69,6 +78,7 @@ class _HomeState extends State<Home> {
                     if (value) {
                       setState(() {
                         meatOp.removeMeat(getMeat[index]);
+                        AppStyles.toastMessage('Meat Removed');
                       });
                     }
                   });
@@ -95,6 +105,7 @@ class _HomeState extends State<Home> {
               }).then((value) {
             setState(() {
               meatOp.addMeat(Meat(value[0], value[1], value[2]));
+              AppStyles.toastMessage('Meat Added');
             });
           });
         },
