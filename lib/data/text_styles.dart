@@ -25,11 +25,16 @@ class AppStyles {
     );
   }
 
-  static hintText() {
-    return const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic);
+  static hintText(icon, String label) {
+    return InputDecoration(
+      labelText: label,
+      icon: Icon(icon),
+    );
   }
 
   static dialogTitle(BuildContext context) {
-    return TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer);
+    return TextStyle(
+      color: Theme.of(context).colorScheme.onPrimaryContainer,
+    );
   }
 }

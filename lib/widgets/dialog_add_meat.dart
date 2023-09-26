@@ -25,30 +25,32 @@ class AddDialog extends StatelessWidget {
     }
 
     return AlertDialog(
-      title: Text(
-        title,
-        style: AppStyles.dialogTitle(context),
+      title: Center(
+        child: Text(
+          title,
+          style: AppStyles.dialogTitle(context),
+        ),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-              controller: TextEditingController(text: name),
-              onChanged: (value) => name = value,
-              decoration: InputDecoration(
-                  hintText: 'Meat Name', hintStyle: AppStyles.hintText())),
-          TextField(
-              controller: TextEditingController(text: image),
-              onChanged: (value) => image = value,
-              decoration: InputDecoration(
-                  hintText: 'Meat Image', hintStyle: AppStyles.hintText())),
-          TextField(
-              controller: TextEditingController(text: desc),
-              onChanged: (value) => desc = value,
-              decoration: InputDecoration(
-                  hintText: 'Meat Description',
-                  hintStyle: AppStyles.hintText()))
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+                controller: TextEditingController(text: name),
+                onChanged: (value) => name = value,
+                decoration: AppStyles.hintText(Icons.abc, 'Meat Name', 'Name')),
+            TextField(
+                controller: TextEditingController(text: image),
+                onChanged: (value) => image = value,
+                decoration:
+                    AppStyles.hintText(Icons.image, 'Image Path', 'image')),
+            TextField(
+                controller: TextEditingController(text: desc),
+                onChanged: (value) => desc = value,
+                decoration: AppStyles.hintText(
+                    Icons.description, 'Meat Description', 'Desc'))
+          ],
+        ),
       ),
       actions: [
         TextButton(
