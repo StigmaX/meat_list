@@ -3,8 +3,6 @@ import 'package:meat_list/data/meat.dart';
 import 'package:meat_list/data/app_style.dart';
 import '../widgets/dialog_add_meat.dart';
 import '../widgets/dialog_confirm.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import '../widgets/meat_card.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

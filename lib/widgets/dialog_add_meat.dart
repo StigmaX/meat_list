@@ -12,15 +12,15 @@ class AddDialog extends StatelessWidget {
   final Meat? meat;
   @override
   Widget build(BuildContext context) {
-    String? name;
-    String? image;
-    String? desc;
+    String name = '';
+    String image = '';
+    String desc = '';
     String title = 'Add Meat';
 
     if (meat != null) {
-      name = meat?.name;
-      image = meat?.image;
-      desc = meat?.description;
+      name = meat!.name!;
+      image = meat!.image!;
+      desc = meat!.description!;
       title = 'Edit Meat';
     }
 
@@ -53,7 +53,11 @@ class AddDialog extends StatelessWidget {
       actions: [
         TextButton(
             onPressed: () {
-              Navigator.of(context).pop([name, image, desc]);
+              if (name.isEmpty || image.isEmpty || desc.isEmpty) {
+                AppStyles.toastMessage('Fill all the Input');
+              } else {
+                Navigator.of(context).pop([name, image, desc]);
+              }
             },
             child: const Text('Ok')),
         TextButton(
