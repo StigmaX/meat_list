@@ -15,10 +15,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final database = Database(dotenv.env['MONGO_URI']!);
+  List<Meat> _meat = [];
 
   @override
   void initState() {
-    database.open();
+    database.open().then((_) {
+      database.read('meat').then((value) {
+        setState(() {
+          _meat = value;
+        });
+      });
+    });
+
     super.initState();
   }
 
@@ -30,12 +38,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    var meatOp = MeatOperation();
-    var getMeat = meatOp.getMeat();
+    // var meatOp = MeatOperation();
+    // var getMeat = meatOp.getMeat();
     return Scaffold(
       appBar: const AppBars(),
       body: ListView.builder(
-        itemCount: getMeat.length,
+        itemCount: _meat.length,
         padding: const EdgeInsets.all(10),
         itemBuilder: (context, index) {
           return Column(
@@ -59,11 +67,11 @@ class _HomeState extends State<Home> {
                 ),
                 tileColor: Theme.of(context).colorScheme.primaryContainer,
                 title: Text(
-                  getMeat[index].name,
+                  _meat[index].name,
                   style: AppStyles.listTitle(context),
                 ),
                 subtitle: Text(
-                  getMeat[index].description,
+                  _meat[index].description,
                   style: AppStyles.listSubTitle(context),
                 ),
                 onLongPress: () {
@@ -71,7 +79,7 @@ class _HomeState extends State<Home> {
                       context: context,
                       builder: (BuildContext context) {
                         return AddDialog(
-                          meat: getMeat[index],
+                          meat: _meat[index],
                         );
                       }).then((value) {
                     setState(() {
@@ -88,11 +96,11 @@ class _HomeState extends State<Home> {
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return ConfirmDialog(meat: getMeat[index]);
+                        return ConfirmDialog(meat: _meat[index]);
                       }).then((value) {
                     if (value) {
                       setState(() {
-                        meatOp.removeMeat(getMeat[index]);
+                        // meatOp.removeMeat(getMeat[index]);
                         AppStyles.toastMessage('Meat Removed');
                       });
                     }
@@ -118,10 +126,13 @@ class _HomeState extends State<Home> {
                   meat: null,
                 );
               }).then((value) {
-            setState(() {
-              database.insert('meat',
-                  Meat(name: value[0], image: value[1], description: value[2]));
-              AppStyles.toastMessage('Meat Added');
+            database.insert('meat',
+                Meat(name: value[0], image: value[1], description: value[2]));
+            AppStyles.toastMessage('Meat Added');
+            database.read('meat').then((value) {
+              setState(() {
+                _meat = value;
+              });
             });
           });
         },
