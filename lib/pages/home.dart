@@ -82,15 +82,18 @@ class _HomeState extends State<Home> {
                           meat: _meat[index],
                         );
                       }).then((value) {
-                    database.edit(
-                        'meat',
-                        Meat(
-                            name: value[0],
-                            image: value[1],
-                            description: value[2]));
-                    database.read('meat').then((value) {
-                      setState(() {
-                        _meat = value;
+                    database
+                        .edit(
+                            'meat',
+                            Meat(
+                                name: value[0],
+                                image: value[1],
+                                description: value[2]))
+                        .then((value) {
+                      database.read('meat').then((value) {
+                        setState(() {
+                          _meat = value;
+                        });
                       });
                     });
                   });
@@ -102,10 +105,11 @@ class _HomeState extends State<Home> {
                         return ConfirmDialog(meat: _meat[index]);
                       }).then((value) {
                     if (value) {
-                      database.delete('meat', _meat[index]);
-                      database.read('meat').then((value) {
-                        setState(() {
-                          _meat = value;
+                      database.delete('meat', _meat[index]).then((value) {
+                        database.read('meat').then((value) {
+                          setState(() {
+                            _meat = value;
+                          });
                         });
                       });
                     }
@@ -131,11 +135,16 @@ class _HomeState extends State<Home> {
                   meat: null,
                 );
               }).then((value) {
-            database.insert('meat',
-                Meat(name: value[0], image: value[1], description: value[2]));
-            database.read('meat').then((value) {
-              setState(() {
-                _meat = value;
+            database
+                .insert(
+                    'meat',
+                    Meat(
+                        name: value[0], image: value[1], description: value[2]))
+                .then((value) {
+              database.read('meat').then((value) {
+                setState(() {
+                  _meat = value;
+                });
               });
             });
           });
