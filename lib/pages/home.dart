@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:meat_list/data/database.dart';
 import 'package:meat_list/data/meat.dart';
 import 'package:meat_list/data/app_style.dart';
 import '../widgets/dialog_add_meat.dart';
@@ -12,6 +14,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final database = Database(dotenv.env['MONGO_URI']!);
+
+  @override
+  void initState() {
+    database.open();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    database.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var meatOp = MeatOperation();
@@ -59,10 +75,11 @@ class _HomeState extends State<Home> {
                         );
                       }).then((value) {
                     setState(() {
-                      meatOp.editMeat(
-                        Meat(value[0], value[1], value[2]),
-                        index,
-                      );
+                      // meatOp.editMeat(
+                      //   Meat(value[0], value[1], value[2]),
+                      //   index,
+                      // );
+
                       AppStyles.toastMessage('Meat Edited');
                     });
                   });
@@ -102,7 +119,8 @@ class _HomeState extends State<Home> {
                 );
               }).then((value) {
             setState(() {
-              meatOp.addMeat(Meat(value[0], value[1], value[2]));
+              database.insert('meat',
+                  Meat(name: value[0], image: value[1], description: value[2]));
               AppStyles.toastMessage('Meat Added');
             });
           });
