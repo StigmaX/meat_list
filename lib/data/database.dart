@@ -1,5 +1,6 @@
 import 'package:mongo_dart/mongo_dart.dart';
 
+import 'app_style.dart';
 import 'meat.dart';
 
 class Database {
@@ -20,6 +21,7 @@ class Database {
     var db = await _dbFuture;
     final collection = db.collection(collectionName);
     await collection.insert(data.toJson());
+    await AppStyles.toastMessage('Meat Added');
   }
 
   Future<List<Meat>> read(String collectionName) async {
@@ -28,5 +30,19 @@ class Database {
     var cursor = collection.find();
     var result = await cursor.map((event) => Meat.fromJson(event)).toList();
     return result;
+  }
+
+  Future<void> edit(String collectionName, Meat data) async {
+    var db = await _dbFuture;
+    var collection = db.collection(collectionName);
+    await collection.update(where.eq('name', data.name), data.toJson());
+    await AppStyles.toastMessage('Meat Edited');
+  }
+
+  Future<void> delete(String collectionName, Meat data) async {
+    var db = await _dbFuture;
+    var collection = db.collection(collectionName);
+    await collection.remove(where.eq('name', data.name));
+    await AppStyles.toastMessage('Meat Deleted');
   }
 }

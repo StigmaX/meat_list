@@ -82,13 +82,16 @@ class _HomeState extends State<Home> {
                           meat: _meat[index],
                         );
                       }).then((value) {
-                    setState(() {
-                      // meatOp.editMeat(
-                      //   Meat(value[0], value[1], value[2]),
-                      //   index,
-                      // );
-
-                      AppStyles.toastMessage('Meat Edited');
+                    database.edit(
+                        'meat',
+                        Meat(
+                            name: value[0],
+                            image: value[1],
+                            description: value[2]));
+                    database.read('meat').then((value) {
+                      setState(() {
+                        _meat = value;
+                      });
                     });
                   });
                 },
@@ -99,9 +102,11 @@ class _HomeState extends State<Home> {
                         return ConfirmDialog(meat: _meat[index]);
                       }).then((value) {
                     if (value) {
-                      setState(() {
-                        // meatOp.removeMeat(getMeat[index]);
-                        AppStyles.toastMessage('Meat Removed');
+                      database.delete('meat', _meat[index]);
+                      database.read('meat').then((value) {
+                        setState(() {
+                          _meat = value;
+                        });
                       });
                     }
                   });
@@ -128,7 +133,6 @@ class _HomeState extends State<Home> {
               }).then((value) {
             database.insert('meat',
                 Meat(name: value[0], image: value[1], description: value[2]));
-            AppStyles.toastMessage('Meat Added');
             database.read('meat').then((value) {
               setState(() {
                 _meat = value;

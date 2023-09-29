@@ -18,9 +18,9 @@ class AddDialog extends StatelessWidget {
     String title = 'Add Meat';
 
     if (meat != null) {
-      name = meat!.name!;
-      image = meat!.image!;
-      desc = meat!.description!;
+      name = meat!.name;
+      image = meat!.image;
+      desc = meat!.description;
       title = 'Edit Meat';
     }
 
