@@ -16,12 +16,14 @@ class AddDialog extends StatelessWidget {
     String image = '';
     String desc = '';
     String title = 'Add Meat';
+    bool enabled = true;
 
     if (meat != null) {
       name = meat!.name;
       image = meat!.image;
       desc = meat!.description;
       title = 'Edit Meat';
+      enabled = false;
     }
 
     return AlertDialog(
@@ -36,6 +38,7 @@ class AddDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
+                enabled: enabled,
                 controller: TextEditingController(text: name),
                 onChanged: (value) => name = value,
                 decoration: AppStyles.hintText(Icons.abc, 'Name')),

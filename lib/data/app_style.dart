@@ -60,6 +60,6 @@ class AppStyles {
   }
 
   static toastMessage(String msg) {
-    return Fluttertoast.showToast(msg: msg);
+    return Fluttertoast.showToast(msg: msg, timeInSecForIosWeb: 50);
   }
 }
