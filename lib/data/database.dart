@@ -20,8 +20,14 @@ class Database {
   Future<void> insert(String collectionName, Meat data) async {
     var db = await _dbFuture;
     final collection = db.collection(collectionName);
-    await collection.insert(data.toJson());
-    await AppStyles.toastMessage('Meat Added');
+    final existingMeat = await collection.findOne({'name': data.name});
+    await collection.createIndex(key: 'name', unique: true);
+    if (existingMeat == null) {
+      await collection.insert(data.toJson());
+      await AppStyles.toastMessage('Meat Added');
+    } else {
+      AppStyles.toastMessage('Meat name already exist');
+    }
   }
 
   Future<List<Meat>> read(String collectionName) async {
