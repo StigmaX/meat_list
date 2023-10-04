@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -27,7 +28,8 @@ class _AddDialogState extends State<AddDialog> {
     setState(() {
       if (result != null) {
         image = File(result.path);
-        imagePath = result.name;
+        final bytes = File(result.path).readAsBytesSync();
+        imagePath = base64Encode(bytes);
       }
     });
   }
@@ -35,14 +37,12 @@ class _AddDialogState extends State<AddDialog> {
   @override
   Widget build(BuildContext context) {
     String name = '';
-    String image = '';
     String desc = '';
     String title = 'Add Meat';
     bool enabled = true;
 
     if (widget.meat != null) {
       name = widget.meat!.name;
-      image = widget.meat!.image;
       desc = widget.meat!.description;
       title = 'Edit Meat';
       enabled = false;
@@ -65,10 +65,6 @@ class _AddDialogState extends State<AddDialog> {
                 onChanged: (value) => name = value,
                 decoration: AppStyles.hintText(Icons.abc, 'Name')),
             TextField(
-                controller: TextEditingController(text: image),
-                onChanged: (value) => image = value,
-                decoration: AppStyles.hintText(Icons.image, 'image')),
-            TextField(
                 controller: TextEditingController(text: desc),
                 onChanged: (value) => desc = value,
                 decoration: AppStyles.hintText(Icons.description, 'Desc')),
@@ -90,13 +86,10 @@ class _AddDialogState extends State<AddDialog> {
       actions: [
         TextButton(
             onPressed: () {
-              if (name.isEmpty ||
-                  image.isEmpty ||
-                  desc.isEmpty ||
-                  imagePath.isEmpty) {
+              if (name.isEmpty || desc.isEmpty || imagePath.isEmpty) {
                 AppStyles.toastMessage('Fill all the Input');
               } else {
-                Navigator.of(context).pop([name, image, desc]);
+                Navigator.of(context).pop([name, imagePath, desc, image]);
               }
             },
             child: const Text('Ok')),
