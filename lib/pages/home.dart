@@ -3,6 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:meat_list/data/database.dart';
 import 'package:meat_list/data/meat.dart';
 import 'package:meat_list/data/app_style.dart';
+import 'package:meat_list/pages/detail.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/dialog_add_meat.dart';
 import '../widgets/dialog_confirm.dart';
 
@@ -57,7 +59,11 @@ class _HomeState extends State<Home> {
                     IconButton(
                       icon: const Icon(Icons.arrow_forward_ios_sharp),
                       onPressed: () {
-                        AppStyles.toastMessage('Detail');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailPage(meat: _meat[index])));
                       },
                     ),
                   ],
@@ -157,27 +163,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-}
-
-class AppBars extends StatelessWidget implements PreferredSizeWidget {
-  const AppBars({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: Center(
-        child: Text(
-          'Meat List',
-          style: AppStyles.appBarStyle(context),
-        ),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      surfaceTintColor: Colors.white,
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(50);
 }

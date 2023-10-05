@@ -62,4 +62,43 @@ class AppStyles {
   static toastMessage(String msg) {
     return Fluttertoast.showToast(msg: msg, timeInSecForIosWeb: 50);
   }
+
+  static titleDescStyle(BuildContext context) {
+    return TextStyle(
+      color: Theme.of(context).colorScheme.onPrimary,
+      fontSize: 25,
+      fontWeight: FontWeight.bold,
+    );
+  }
+
+  //lineargradient
+  static gradient(BuildContext context, code) {
+    switch (code) {
+      case 0:
+        return LinearGradient(
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
+            colors: [
+              Theme.of(context).colorScheme.primaryContainer,
+              Theme.of(context).colorScheme.primary
+            ]);
+      case 1:
+        return SweepGradient(
+            center: Alignment.center,
+            startAngle: 0,
+            endAngle: 3.14,
+            colors: [
+              Theme.of(context).colorScheme.onPrimary,
+              Theme.of(context).colorScheme.primary
+            ]);
+      case 2:
+        return RadialGradient(
+            center: Alignment.center,
+            tileMode: TileMode.mirror,
+            colors: [
+              Theme.of(context).colorScheme.primary,
+              Theme.of(context).colorScheme.onPrimary
+            ]);
+    }
+  }
 }
