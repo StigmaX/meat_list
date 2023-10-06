@@ -21,14 +21,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    database.open().then((_) {
-      database.read('meat').then((value) {
-        setState(() {
-          _meat = value;
-        });
-      });
-    });
-
+    database.open();
     super.initState();
   }
 
@@ -44,88 +37,113 @@ class _HomeState extends State<Home> {
     // var getMeat = meatOp.getMeat();
     return Scaffold(
       appBar: const AppBars(),
-      body: ListView.builder(
-        itemCount: _meat.length,
-        padding: const EdgeInsets.all(10),
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              ListTile(
-                contentPadding: const EdgeInsets.only(left: 15, right: 15),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
+      body: FutureBuilder(
+        future: database.read('meat'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error has occured',
+                style: AppStyles.listTitle(context),
+              ),
+            );
+          } else {
+            _meat = snapshot.data!;
+            return ListView.builder(
+              itemCount: _meat.length,
+              padding: const EdgeInsets.all(10),
+              itemBuilder: (context, index) {
+                return Column(
                   children: [
-                    const VerticalDivider(),
-                    IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios_sharp),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    DetailPage(meat: _meat[index])));
-                      },
-                    ),
-                  ],
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                tileColor: Theme.of(context).colorScheme.primaryContainer,
-                title: Text(
-                  _meat[index].name,
-                  style: AppStyles.listTitle(context),
-                ),
-                subtitle: Text(
-                  _meat[index].description,
-                  style: AppStyles.listSubTitle(context),
-                ),
-                onLongPress: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AddDialog(
-                          meat: _meat[index],
-                        );
-                      }).then((value) {
-                    database
-                        .edit(
-                            'meat',
-                            Meat(
-                                name: value[0],
-                                image: value[1],
-                                description: value[2]))
-                        .then((value) {
-                      database.read('meat').then((value) {
-                        setState(() {
-                          _meat = value;
-                        });
-                      });
-                    });
-                  });
-                },
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return ConfirmDialog(meat: _meat[index]);
-                      }).then((value) {
-                    if (value) {
-                      database.delete('meat', _meat[index]).then((value) {
-                        database.read('meat').then((value) {
-                          setState(() {
-                            _meat = value;
+                    ListTile(
+                      contentPadding:
+                          const EdgeInsets.only(left: 15, right: 15),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const VerticalDivider(),
+                          IconButton(
+                            icon: const Icon(Icons.arrow_forward_ios_sharp),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailPage(meat: _meat[index]),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      tileColor: Theme.of(context).colorScheme.primaryContainer,
+                      title: Text(
+                        _meat[index].name,
+                        style: AppStyles.listTitle(context),
+                      ),
+                      subtitle: Text(
+                        _meat[index].description,
+                        style: AppStyles.listSubTitle(context),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      onLongPress: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AddDialog(
+                                meat: _meat[index],
+                              );
+                            }).then((value) {
+                          database
+                              .edit(
+                                  'meat',
+                                  Meat(
+                                      name: value[0],
+                                      image: value[1],
+                                      description: value[2]))
+                              .then((value) {
+                            database.read('meat').then((value) {
+                              setState(() {
+                                _meat = value;
+                              });
+                            });
                           });
                         });
-                      });
-                    }
-                  });
-                },
-                textColor: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-              const SizedBox(height: 5),
-            ],
-          );
+                      },
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ConfirmDialog(meat: _meat[index]);
+                            }).then((value) {
+                          if (value) {
+                            database.delete('meat', _meat[index]).then((value) {
+                              database.read('meat').then((value) {
+                                setState(() {
+                                  _meat = value;
+                                });
+                              });
+                            });
+                          }
+                        });
+                      },
+                      textColor:
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    const SizedBox(height: 5),
+                  ],
+                );
+              },
+            );
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(

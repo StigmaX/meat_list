@@ -60,6 +60,7 @@ class DetailPage extends StatelessWidget {
                 child: Image.memory(
                   base64Decode(meat.image),
                   fit: BoxFit.cover,
+                  height: 250,
                 ),
               ),
             ),
