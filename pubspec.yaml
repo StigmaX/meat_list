@@ -1,5 +1,5 @@
 name: meat_list
-description: A new Flutter project.
+description: A Project about meat and it's variety with it's informations.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -42,6 +42,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   file_picker: ^5.5.0
   image_picker: ^1.0.4
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -96,3 +97,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "icons/icon.png"
+  ios_image_path: "icons/icon.png"
