@@ -18,10 +18,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final database = Database(dotenv.env['MONGO_URI']!);
   List<Meat> _meat = [];
+  Future? _data;
 
   @override
   void initState() {
     database.open();
+    _data = database.read('meat');
     super.initState();
   }
 
@@ -33,12 +35,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // var meatOp = MeatOperation();
-    // var getMeat = meatOp.getMeat();
     return Scaffold(
       appBar: const AppBars(),
       body: FutureBuilder(
-        future: database.read('meat'),
+        future: _data,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -46,102 +46,124 @@ class _HomeState extends State<Home> {
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text(
-                'Error has occured',
-                style: AppStyles.listTitle(context),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Error has occured',
+                    style: AppStyles.listTitle(context),
+                  ),
+                  TextButton(
+                      onPressed: () async {
+                        setState(() {
+                          _data = database.read('meat');
+                        });
+                      },
+                      child: const Icon(Icons.refresh))
+                ],
               ),
             );
           } else {
             _meat = snapshot.data!;
-            return ListView.builder(
-              itemCount: _meat.length,
-              padding: const EdgeInsets.all(10),
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    ListTile(
-                      contentPadding:
-                          const EdgeInsets.only(left: 15, right: 15),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const VerticalDivider(),
-                          IconButton(
-                            icon: const Icon(Icons.arrow_forward_ios_sharp),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailPage(meat: _meat[index]),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      tileColor: Theme.of(context).colorScheme.primaryContainer,
-                      title: Text(
-                        _meat[index].name,
-                        style: AppStyles.listTitle(context),
-                      ),
-                      subtitle: Text(
-                        _meat[index].description,
-                        style: AppStyles.listSubTitle(context),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      onLongPress: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AddDialog(
-                                meat: _meat[index],
-                              );
-                            }).then((value) {
-                          database
-                              .edit(
-                                  'meat',
-                                  Meat(
-                                      name: value[0],
-                                      image: value[1],
-                                      description: value[2]))
-                              .then((value) {
-                            database.read('meat').then((value) {
-                              setState(() {
-                                _meat = value;
-                              });
-                            });
-                          });
-                        });
-                      },
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return ConfirmDialog(meat: _meat[index]);
-                            }).then((value) {
-                          if (value) {
-                            database.delete('meat', _meat[index]).then((value) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  _data = database.read('meat');
+                });
+              },
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
+              child: ListView.builder(
+                itemCount: _meat.length,
+                padding: const EdgeInsets.all(10),
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        contentPadding:
+                            const EdgeInsets.only(left: 15, right: 15),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const VerticalDivider(),
+                            IconButton(
+                              icon: const Icon(Icons.arrow_forward_ios_sharp),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailPage(meat: _meat[index]),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        tileColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        title: Text(
+                          _meat[index].name,
+                          style: AppStyles.listTitle(context),
+                        ),
+                        subtitle: Text(
+                          _meat[index].description,
+                          style: AppStyles.listSubTitle(context),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        onLongPress: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AddDialog(
+                                  meat: _meat[index],
+                                );
+                              }).then((value) {
+                            database
+                                .edit(
+                                    'meat',
+                                    Meat(
+                                        name: value[0],
+                                        image: value[1],
+                                        description: value[2]))
+                                .then((value) {
                               database.read('meat').then((value) {
                                 setState(() {
-                                  _meat = value;
+                                  _data = database.read('meat');
                                 });
                               });
                             });
-                          }
-                        });
-                      },
-                      textColor:
-                          Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                    const SizedBox(height: 5),
-                  ],
-                );
-              },
+                          });
+                        },
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ConfirmDialog(meat: _meat[index]);
+                              }).then((value) {
+                            if (value) {
+                              database
+                                  .delete('meat', _meat[index])
+                                  .then((value) {
+                                setState(() {
+                                  _data = database.read('meat');
+                                });
+                              });
+                            }
+                          });
+                        },
+                        textColor:
+                            Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                      const SizedBox(height: 5),
+                    ],
+                  );
+                },
+              ),
             );
           }
         },
@@ -167,7 +189,7 @@ class _HomeState extends State<Home> {
                 .then((value) {
               database.read('meat').then((value) {
                 setState(() {
-                  _meat = value;
+                  _data = database.read('meat');
                 });
               });
             });
