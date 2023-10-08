@@ -19,12 +19,17 @@ class Database {
 
   Future<void> insert(String collectionName, Meat data) async {
     var db = await _dbFuture;
+
     final collection = db.collection(collectionName);
     final existingMeat = await collection.findOne({'name': data.name});
     await collection.createIndex(key: 'name', unique: true);
     if (existingMeat == null) {
-      await collection.insert(data.toJson());
-      await AppStyles.toastMessage('Meat Added');
+      await collection
+          .insert(data.toJson())
+          .onError(
+            (error, stackTrace) => AppStyles.toastMessage('error $error'),
+          )
+          .whenComplete(() => AppStyles.toastMessage('Meat Added'));
     } else {
       AppStyles.toastMessage('Meat name already exist');
     }
@@ -32,23 +37,36 @@ class Database {
 
   Future<List<Meat>> read(String collectionName) async {
     var db = await _dbFuture;
+
     final collection = db.collection(collectionName);
     var cursor = collection.find();
-    var result = await cursor.map((event) => Meat.fromJson(event)).toList();
+    var result = await cursor
+        .map((event) => Meat.fromJson(event))
+        .toList()
+        .onError((error, stackTrace) => AppStyles.toastMessage('error $error'));
     return result;
   }
 
   Future<void> edit(String collectionName, Meat data) async {
     var db = await _dbFuture;
+
     var collection = db.collection(collectionName);
-    await collection.update(where.eq('name', data.name), data.toJson());
-    await AppStyles.toastMessage('Meat Edited');
+    await collection
+        .update(where.eq('name', data.name), data.toJson())
+        .onError(
+          (error, stackTrace) => AppStyles.toastMessage('error $error'),
+        )
+        .whenComplete(() => AppStyles.toastMessage('Meat Edited'));
   }
 
   Future<void> delete(String collectionName, Meat data) async {
     var db = await _dbFuture;
     var collection = db.collection(collectionName);
-    await collection.remove(where.eq('name', data.name));
-    await AppStyles.toastMessage('Meat Deleted');
+    await collection
+        .remove(where.eq('name', data.name))
+        .onError(
+          (error, stackTrace) => AppStyles.toastMessage('error $error'),
+        )
+        .whenComplete(() => AppStyles.toastMessage('Meat Deleted'));
   }
 }
