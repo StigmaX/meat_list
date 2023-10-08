@@ -1,16 +1,30 @@
-# meat_list
+# About The Project
 
-A new Flutter project.
+This Project Provides Information about meat and it's variations, user can also add, delete, or edit existing data.
+
+## Built With
+
+This Project is built with: 
+
+- Dart
+- Flutter Framework
+- Mongo DB 
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To get a local copy up and running follow these simple example steps.
 
-A few resources to get you started if this is your first Flutter project:
+### Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+1. Create a MogoDB Database
+2. Clone the repo
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```sh
+git clone https://github.com/your_username_/Project-Name.git
+```
+3. Enter your MongoDB url in `.env`
+
+```
+const MONGO_URI  = 'MongoDB url';
+```
+
